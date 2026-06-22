@@ -84,7 +84,7 @@
 
 ## Blackboard Course Settings Outside Illuminate Scope
 
-The following settings are configurable in the Blackboard Learn course interface. Illuminate focuses on the course attributes most relevant to learning analytics and institutional reporting.
+The following settings are configurable in the Blackboard Learn course interface, but are not represented in Illuminate. Illuminate focuses on the course attributes most relevant to learning analytics and institutional reporting.
 
 | Category | Field | Notes |
 |---|---|---|
