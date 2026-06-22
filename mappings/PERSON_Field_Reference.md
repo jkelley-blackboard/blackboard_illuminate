@@ -58,7 +58,7 @@
 
 ## Blackboard User Profile Fields Outside Illuminate Scope
 
-The following fields are available in the Blackboard Learn user profile interface. Illuminate focuses on the core person attributes most relevant to learning analytics and institutional reporting. Fields primarily used for directory, HR, or contact management purposes are outside Illuminate's current scope.
+The following fields are available in the Blackboard Learn user profile interface, but are NOT represented in Illuminate. Illuminate focuses on the core person attributes most relevant to learning analytics and institutional reporting. Fields primarily used for directory, HR, or contact management purposes are outside Illuminate's current scope.
 
 | Category | Field | Notes |
 |---|---|---|
@@ -68,7 +68,7 @@ The following fields are available in the Blackboard Learn user profile interfac
 | | Other Name | — |
 | | Name Pronunciation | UI display preference only |
 | **Education & Academic Profile** | Education Level | — |
-| **Email** | Institution Email | Illuminate stores a single email address per user |
+| **Email** | Institution Email | Illuminate stores only the primary email address per user.  This one is used only for MS integration. |
 | **Demographics** | Gender | — |
 | | Pronouns | — |
 | **Address** | Street 1 | — |
@@ -81,6 +81,6 @@ The following fields are available in the Blackboard Learn user profile interfac
 | | Work Fax | — |
 | | Mobile Phone | — |
 | **Web** | Website | — |
-| **Institutional Structure** | Hierarchy / Node associations | User-to-node relationships are managed separately from the PERSON model |
-| **Roles** | Secondary Institution Roles | Illuminate stores the primary institutional role and primary system role |
+| **Institutional Structure** | Hierarchy / Node associations | User-to-node relationships are out of scope |
+| **Roles** | Secondary Institution Roles | Illuminate stores the primary institutional role and primary system role only |
 | | Secondary System Roles | See above |
