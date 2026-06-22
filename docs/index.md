@@ -1,8 +1,6 @@
 # Blackboard Illuminate Data Resources
 
-SQL queries, field references, and integration guides for working with Blackboard Illuminate analytics data in Snowflake.
-
-> These resources are provided as-is, without warranty or support. Not an official Blackboard/Anthology product.
+> **Disclaimer:** Nothing on this site supersedes the [official Blackboard Illuminate documentation](https://help.blackboard.com/Anthology_Illuminate) or any agreement your institution has with Blackboard. These resources are supplemental only — provided as-is, without warranty or support, and not an official Blackboard/Anthology product.
 
 ---
 
