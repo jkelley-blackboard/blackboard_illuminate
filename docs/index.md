@@ -11,6 +11,12 @@
 
 ---
 
+## Best Practices & Data Notes
+
+- [Best Practices & Data Notes](best-practices) — Patterns and gotchas when working with Illuminate data, including cross-CDM join behavior
+
+---
+
 ## Field References
 
 Column-level documentation for core CDM tables, with links to the Illuminate Data Dictionary:
