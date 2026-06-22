@@ -7,7 +7,7 @@ Personal collection of SQL queries, field references, and integration guides for
 
 📖 **[View the documentation site](https://jkelley-blackboard.github.io/blackboard_illuminate)**
 
-> Provided without warranty or support. Not an official Blackboard/Anthology product.
+> **Disclaimer:** Nothing on this site supersedes the [official Blackboard Illuminate documentation](https://help.blackboard.com/Anthology_Illuminate) or any agreement your institution has with Blackboard. These resources are supplemental only — provided as-is, without warranty or support.
 
 ---
 
