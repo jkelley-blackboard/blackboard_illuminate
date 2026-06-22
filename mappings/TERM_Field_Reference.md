@@ -43,6 +43,7 @@
 - **[STAGE:data_src_pk1](https://illuminate.blackboard.com/dictionary/entries/entry/CDM_LMS-TERM-STAGE)** — Numeric identifier for the data source record in Blackboard, identifying the integration or authority that owns this term record.
 
 ## Blackboard Term Fields Outside Illuminate Scope
+The following data related to terms in the Blackboard application are not included in the Illuminate data model.
 
 | Blackboard Field | Notes |
 |---|---|
