@@ -1,3 +1,5 @@
+[← Home](.)
+
 # Illuminate — Snowflake Connection Information
 ### How to Locate the Details Needed to Connect External Systems
 

@@ -1,3 +1,5 @@
+[← Home](.)
+
 # Blackboard Illuminate → Microsoft Power BI Integration Guide
 ### Snowflake Canonical Data Model — Power BI Connection
 
