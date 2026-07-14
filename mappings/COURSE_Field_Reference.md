@@ -98,3 +98,7 @@ The following settings are configurable in the Blackboard Learn course interface
 | **Localization** | Language Pack | Course-level language setting |
 | **Content View** | Text / Icon View | Original course view preference |
 | **Course Banner** | Banner image | Course branding asset |
+
+## Supplementing Gaps with the REST API
+
+Several of the course settings above (e.g., subject/discipline metadata, categories, banner image) aren't present in Illuminate but may be available directly from Blackboard Learn via the **Learn REST API** — e.g. `GET /learn/api/public/v3/courses/{courseId}`. This is a live call against your Learn environment, not a Snowflake/Illuminate query, so it requires a registered REST integration with the appropriate entitlements and is best suited to one-off lookups or small-scale enrichment rather than bulk reporting. Verify current endpoint paths and versions against your Learn REST API documentation.

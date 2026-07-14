@@ -53,3 +53,7 @@ The following data related to terms in the Blackboard application are not includ
 | Term Type | Introduced in Blackboard 2026: Unspecified, Semester, Trimester, Quarter, Intersession, Module, Annual. Not yet represented in Illuminate. |
 | Term Hierarchy | Introduced in Blackboard 2026: term-to-term associations allowing parent/child term relationships. Not yet represented in Illuminate. |
 | Performance Results Scale | Introduced in Blackboard 2026 in support of Outcomes integration. Not yet represented in Illuminate. |
+
+## Supplementing Gaps with the REST API
+
+The term settings above that are outside Illuminate's scope (e.g., Term Type, Term Hierarchy, Duration Type) may be available directly from Blackboard Learn via the **Learn REST API** — e.g. `GET /learn/api/public/v1/terms/{termId}`. This is a live call against your Learn environment, not a Snowflake/Illuminate query, so it requires a registered REST integration with the appropriate entitlements and is best suited to one-off lookups or small-scale enrichment rather than bulk reporting. Verify current endpoint paths and versions against your Learn REST API documentation.

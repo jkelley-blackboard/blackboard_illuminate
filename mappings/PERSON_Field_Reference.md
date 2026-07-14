@@ -84,3 +84,7 @@ The following fields are available in the Blackboard Learn user profile interfac
 | **Institutional Structure** | Hierarchy / Node associations | User-to-node relationships are out of scope |
 | **Roles** | Secondary Institution Roles | Illuminate stores the primary institutional role and primary system role only |
 | | Secondary System Roles | See above |
+
+## Supplementing Gaps with the REST API
+
+Several of the profile fields above (e.g., address, phone numbers, gender, pronouns, secondary roles) aren't present in Illuminate but may be available directly from Blackboard Learn via the **Learn REST API** — e.g. `GET /learn/api/public/v1/users/{userId}`. This is a live call against your Learn environment, not a Snowflake/Illuminate query, so it requires a registered REST integration with the appropriate entitlements and is best suited to one-off lookups or small-scale enrichment rather than bulk reporting. Verify current endpoint paths and versions against your Learn REST API documentation.

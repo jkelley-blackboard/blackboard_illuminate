@@ -64,3 +64,7 @@
 | **Identifying instructor-like roles** | Use `ACT_AS_INSTRUCTOR_IND = TRUE` rather than matching on role names. This accounts for custom institution-defined roles that inherit instructor privileges. |
 | **Accommodations and course experience** | `DUE_DATE_EXCEPTION` and `TIME_LIMIT_EXCEPTION` apply to Ultra course sections only and will be `NULL` for Original course enrollments. |
 | **Enrollment timestamp** | PERSON_COURSE uses `ENROLLMENT_TIME` for the source-side enrollment date. `ROW_INSERTED_TIME` reflects when the record arrived in Snowflake, which may differ. |
+
+## Supplementing Gaps with the REST API
+
+The enrollment-level fields above that are outside Illuminate's scope (e.g., availability override date, enrollment data source key) may be available directly from Blackboard Learn via the **Learn REST API** — e.g. `GET /learn/api/public/v1/courses/{courseId}/users/{userId}`. This is a live call against your Learn environment, not a Snowflake/Illuminate query, so it requires a registered REST integration with the appropriate entitlements and is best suited to one-off lookups or small-scale enrichment rather than bulk reporting. Verify current endpoint paths and versions against your Learn REST API documentation.
