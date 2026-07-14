@@ -14,6 +14,7 @@
 ## Best Practices & Data Notes
 
 - [Best Practices & Data Notes](best-practices) — Patterns and gotchas when working with Illuminate data, including cross-CDM join behavior
+- [Basic User Activity Tracking](Activity_Tracking_Guide) — Working with `SESSION_ACTIVITY` and `COURSE_ACTIVITY`: grain, units, and common gotchas
 
 ---
 
