@@ -2,6 +2,12 @@
    ALLY INSTRUCTOR-MADE ACCESSIBILITY FIXES — COURSE / USER SUMMARY
    =============================================================================
 
+   Author : Jeff Kelley, Principal Solutions Engineer, Blackboard Inc.
+            jeff.kelley@blackboard.com
+   Date   : 2026-07-16
+   (c) Blackboard Inc. All rights reserved.
+   Provided as-is without support or warranty of any kind.
+
    PURPOSE
    -------
    Answers: "Does Illuminate contain the user who made content accessibility
