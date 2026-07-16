@@ -1,3 +1,34 @@
 title: Blackboard Illuminate Data Resources
 description: SQL queries, field references, and integration guides for Blackboard Illuminate analytics in Snowflake
-theme: jekyll-theme-cayman
+url: "https://jkelley-blackboard.github.io"
+baseurl: "/blackboard_illuminate"
+
+theme: minima
+
+minima:
+  skin: classic
+
+markdown: kramdown
+kramdown:
+  html_to_native: true
+  input: GFM
+  syntax_highlighter: rouge
+
+plugins:
+  - jekyll-relative-links
+
+relative_links:
+  enabled: true
+  collections: true
+
+defaults:
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "default"
+
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock

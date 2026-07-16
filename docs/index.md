@@ -1,22 +1,17 @@
 # Blackboard Illuminate Data Resources
 
+[View Repository](https://github.com/jkelley-blackboard/blackboard_illuminate)
+
+### Navigation
+
+- [Snowflake Connection Info](Illuminate_Snowflake_Connection_Info)
+- [Power BI Integration](Illuminate_PowerBI_Integration_Guide)
+- [Best Practices & Data Notes](best-practices)
+- [Activity Tracking Guide](Activity_Tracking_Guide)
+
+This site collects SQL queries, field references, and integration guides for working with **Blackboard Illuminate** analytics data in Snowflake.
+
 > **Disclaimer:** Nothing on this site supersedes the [official Blackboard Illuminate documentation](https://help.blackboard.com/Anthology_Illuminate) or any agreement your institution has with Blackboard. These resources are supplemental only — provided as-is, without warranty or support.
-
----
-
-## Guides
-
-- [Snowflake Connection Information](Illuminate_Snowflake_Connection_Info) — How to locate your server URL, database, warehouse, and service account credentials
-- [Power BI Integration](Illuminate_PowerBI_Integration_Guide) — Connecting Power BI Desktop and Service to Illuminate
-
----
-
-## Best Practices & Data Notes
-
-- [Best Practices & Data Notes](best-practices) — Patterns and gotchas when working with Illuminate data, including cross-CDM join behavior
-- [Basic User Activity Tracking](Activity_Tracking_Guide) — Working with `SESSION_ACTIVITY` and `COURSE_ACTIVITY`: grain, units, and common gotchas
-
----
 
 ## Field References
 
