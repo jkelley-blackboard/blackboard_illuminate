@@ -6,7 +6,10 @@
 -- Purpose: Simplest possible "when did this user last log in"
 --          query — system-wide, not scoped to a course.
 -- See    : docs/Activity_Tracking_Guide.md
--- Author : jeff.kelley@blackboard.com
+-- Author : Jeff Kelley, Principal Solutions Engineer, Blackboard Inc.
+--          jeff.kelley@blackboard.com
+-- Date   : 2026-07-14
+-- (c) Blackboard Inc. All rights reserved.
 -- Provided as-is, without warranty or support.
 -- ============================================================
 

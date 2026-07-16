@@ -10,7 +10,10 @@
 --          MultiCourseUserParticipation_20260424.sql and
 --          student_course_summary.sql in this directory.
 -- See    : docs/Activity_Tracking_Guide.md
--- Author : jeff.kelley@blackboard.com
+-- Author : Jeff Kelley, Principal Solutions Engineer, Blackboard Inc.
+--          jeff.kelley@blackboard.com
+-- Date   : 2026-07-14
+-- (c) Blackboard Inc. All rights reserved.
 -- Provided as-is, without warranty or support.
 -- ============================================================
 

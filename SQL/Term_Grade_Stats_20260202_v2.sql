@@ -1,3 +1,12 @@
+/* ============================================================================================
+   QUERY: Course Grade Metrics (Non-Final Grade Counts + Final-Grade Stats) — v2
+   AUTHOR: Jeff Kelley, Principal Solutions Engineer, Blackboard Inc.
+           jeff.kelley@blackboard.com
+   DATE:   2026-02-03
+   NOTE:   Snowflake SQL. (c) Blackboard Inc. All rights reserved.
+           Provided as-is without support or warranty of any kind.
+   ============================================================================================ */
+
 WITH
 
 -- pre select the course list by term --

@@ -1,9 +1,16 @@
--- Sept 8, 2022
--- added course information and instructor usernames
--- jeff.kelley@blackboard.com  no support or warranty
+-- ============================================================
+-- Collaborate Recording Report
 -- Extract Recording info in a format similar to the Recording Report
 -- https://help.blackboard.com/Collaborate/Ultra/Manager/Recording_Report
 -- for use with download/delete python scripts
+-- Added course information and instructor usernames.
+--
+-- Author : Jeff Kelley, Principal Solutions Engineer, Blackboard Inc.
+--          jeff.kelley@blackboard.com
+-- Date   : 2022-09-08
+-- (c) Blackboard Inc. All rights reserved.
+-- Provided as-is without support or warranty of any kind.
+-- ============================================================
 
 
 SELECT DISTINCT 

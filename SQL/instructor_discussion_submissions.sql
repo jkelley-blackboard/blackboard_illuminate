@@ -25,6 +25,12 @@ Replace placeholders:
   {start_date}
   {end_date}
   {course_number}
+
+Author : Jeff Kelley, Principal Solutions Engineer, Blackboard Inc.
+         jeff.kelley@blackboard.com
+Date   : 2026-03-03
+(c) Blackboard Inc. All rights reserved.
+Provided as-is without support or warranty of any kind.
 ===============================================================================
 */
 

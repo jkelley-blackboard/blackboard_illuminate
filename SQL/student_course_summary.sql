@@ -1,7 +1,13 @@
--- ============================================
+-- ============================================================
 -- Student summary report
 -- Revised from https://github.com/blackboard/BBDN-BlackboardData-Queries/tree/master/student-course-summary
--- ============================================
+--
+-- Author : Jeff Kelley, Principal Solutions Engineer, Blackboard Inc.
+--          jeff.kelley@blackboard.com
+-- Date   : 2025-10-16
+-- (c) Blackboard Inc. All rights reserved.
+-- Provided as-is without support or warranty of any kind.
+-- ============================================================
 
 WITH course_activity_summary AS (
     -- Summarize course-level activity per student

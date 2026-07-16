@@ -2,10 +2,11 @@
 /*
 ================================================================================
  Description:    Example CTE (enrollment map) to get child course information on merged courses.
- Author:         Jeff Kelley  (jeff.kelley@anthology.com)
- Created:        2025-11-20
- License:        MIT License - Anthology retains rights
-                No warranty or support
+ Author:         Jeff Kelley, Principal Solutions Engineer, Blackboard Inc.
+                 jeff.kelley@blackboard.com
+ Date:           2025-11-20
+ (c) Blackboard Inc. All rights reserved.
+ Provided as-is without support or warranty of any kind.
 ================================================================================
 */
 

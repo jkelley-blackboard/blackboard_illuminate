@@ -1,3 +1,12 @@
+-- ============================================================
+-- Gradebook Extractor
+--
+-- Author : Jeff Kelley, Principal Solutions Engineer, Blackboard Inc.
+--          jeff.kelley@blackboard.com
+-- Date   : 2025-12-19
+-- (c) Blackboard Inc. All rights reserved.
+-- Provided as-is without support or warranty of any kind.
+-- ============================================================
 
 WITH course_cte AS (  -- you can expand this CTE to be term based selection of courses
     SELECT

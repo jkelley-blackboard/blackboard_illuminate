@@ -1,6 +1,9 @@
 /******************************************************************************
  * TITLE:        Course Item Deletion Audit Query
+ * AUTHOR:       Jeff Kelley, Principal Solutions Engineer, Blackboard Inc.
+ *               jeff.kelley@blackboard.com
  * DATE:         2026-02-20
+ * RIGHTS:       (c) Blackboard Inc. All rights reserved.
  * WARRANTY:     This script is provided "AS IS" with no warranties, express
  *               or implied. Use at your own risk.
  * SUPPORT:      No support is provided. This script is unsupported and may

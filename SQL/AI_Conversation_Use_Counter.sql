@@ -1,5 +1,8 @@
--- Author: jeff.kelley@anthology.com
--- Disclaimer: Provided without support or warranty  
+-- Author: Jeff Kelley, Principal Solutions Engineer, Blackboard Inc.
+--         jeff.kelley@blackboard.com
+-- Date: 2025-10-08
+-- (c) Blackboard Inc. All rights reserved.
+-- Disclaimer: Provided as-is without support or warranty of any kind.
 -- Purpose: Get a click count and unique assessment counts for AI Conversations in Blackboard Ultra
 
 SELECT 

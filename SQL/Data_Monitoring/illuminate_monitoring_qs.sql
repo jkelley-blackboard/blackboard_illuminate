@@ -1,7 +1,9 @@
 -- =============================================================================
 -- Anthology Illuminate — CDM Insert Monitoring (QuickSight dataset variant)
 -- Copyright Blackboard, Inc. All rights reserved.
--- Author:  jeff.kelley@blackboard.com
+-- Author:  Jeff Kelley, Principal Solutions Engineer, Blackboard Inc.
+--          jeff.kelley@blackboard.com
+-- Date:    2026-03-26
 -- Ref:     https://help.anthology.com/illuminate/en/anthology-illuminate-developer/
 --          refresh-rates-for-illuminate-canonical-data-models.html
 --

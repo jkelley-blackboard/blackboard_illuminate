@@ -1,5 +1,11 @@
--- jeff.kelley@anthology.com  March 2023
--- provided without support or warranty
+-- ============================================================
+-- Grade Center Use
+-- Author : Jeff Kelley, Principal Solutions Engineer, Blackboard Inc.
+--          jeff.kelley@blackboard.com
+-- Date   : 2023-03-17
+-- (c) Blackboard Inc. All rights reserved.
+-- Provided as-is without support or warranty of any kind.
+-- ============================================================
 
 -- for a group of courses, provide instructors, time spent grading, count of students, grade items and grades.
 -- reminder: most original course start with two columns, ultra courses start with zero

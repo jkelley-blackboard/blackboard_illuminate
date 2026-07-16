@@ -1,10 +1,14 @@
-/* 
+/*
   Grade Item Extract
-    for every enrollment in select courses 
+    for every enrollment in select courses
     provides grade performance and date for item selected by name
     if the item doesn't exist or the user has no attempt/grade returns null row
-  jeff.kelley@anthology.com  21 Feb 2023
-  provided without warranty or support
+
+  Author : Jeff Kelley, Principal Solutions Engineer, Blackboard Inc.
+           jeff.kelley@blackboard.com
+  Date   : 2023-02-21
+  (c) Blackboard Inc. All rights reserved.
+  Provided as-is without support or warranty of any kind.
 */
 
 SELECT

@@ -1,5 +1,8 @@
--- Author: jeff.kelley@anthology.com  
--- Disclaimer: Provided without support or warranty  
+-- Author: Jeff Kelley, Principal Solutions Engineer, Blackboard Inc.
+--         jeff.kelley@blackboard.com
+-- Date: 2025-09-21
+-- (c) Blackboard Inc. All rights reserved.
+-- Disclaimer: Provided as-is without support or warranty of any kind.
 -- Purpose: List all instructors with at least one AI Conversation assessment in Blackboard Ultra
 
 

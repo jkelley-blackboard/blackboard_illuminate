@@ -8,6 +8,11 @@
 -- Notes   : Adjust activity_start offset in Params CTE to change lookback.
 --           Adjust timezone in CONVERT_TIMEZONE calls to match your institution.
 --           Activity tier thresholds (10/50) are a starting point — tune to taste.
+-- Author  : Jeff Kelley, Principal Solutions Engineer, Blackboard Inc.
+--           jeff.kelley@blackboard.com
+-- Date    : 2026-05-15
+-- (c) Blackboard Inc. All rights reserved.
+-- Provided as-is without support or warranty of any kind.
 -- =============================================================================
 
 WITH

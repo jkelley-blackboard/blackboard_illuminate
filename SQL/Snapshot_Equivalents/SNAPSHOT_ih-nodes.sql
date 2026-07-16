@@ -3,7 +3,9 @@
    Copyright (c) Blackboard Inc.
    All rights reserved.
 
-   Author: Jeff Kelley
+   Author: Jeff Kelley, Principal Solutions Engineer, Blackboard Inc.
+           jeff.kelley@blackboard.com
+   Date:   2026-03-25
 
    Description:
      This code generates data extracts intended to be SIMILAR in structure

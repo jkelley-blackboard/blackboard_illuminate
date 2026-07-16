@@ -1,4 +1,12 @@
+-- ============================================================
 -- Basic course instructor Activity Summary
+--
+-- Author : Jeff Kelley, Principal Solutions Engineer, Blackboard Inc.
+--          jeff.kelley@blackboard.com
+-- Date   : 2025-12-04
+-- (c) Blackboard Inc. All rights reserved.
+-- Provided as-is without support or warranty of any kind.
+-- ============================================================
 
 WITH course_activity_summary AS (
     -- summarize course-level activity per membership

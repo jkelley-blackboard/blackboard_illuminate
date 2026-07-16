@@ -1,8 +1,14 @@
--- find out who converted a course to ultra
--- example of useing the objectId value from Ultra Events
+-- ============================================================
+-- Ultra Activity Audit — Example: Who Converted a Course to Ultra
+-- Example of using the objectId value from Ultra Events
 -- for audit activity investigations.
--- jeff.kelley@anthology.com  updated 2026-02-20
--- no warranty or support
+--
+-- Author : Jeff Kelley, Principal Solutions Engineer, Blackboard Inc.
+--          jeff.kelley@blackboard.com
+-- Date   : 2026-02-20
+-- (c) Blackboard Inc. All rights reserved.
+-- Provided as-is without support or warranty of any kind.
+-- ============================================================
 
 
 SELECT

@@ -1,3 +1,13 @@
+-- ============================================================
+-- Single User Weekly Course Activity
+--
+-- Author : Jeff Kelley, Principal Solutions Engineer, Blackboard Inc.
+--          jeff.kelley@blackboard.com
+-- Date   : 2025-11-18
+-- (c) Blackboard Inc. All rights reserved.
+-- Provided as-is without support or warranty of any kind.
+-- ============================================================
+
 WITH weekly_activity AS (
     SELECT
         PERSON_COURSE_ID,

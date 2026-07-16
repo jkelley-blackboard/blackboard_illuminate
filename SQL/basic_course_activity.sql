@@ -8,7 +8,10 @@
 -- Notes  : DURATION_SUM is in seconds, so it's divided by 60 below
 --          to report minutes.
 -- See    : docs/Activity_Tracking_Guide.md
--- Author : jeff.kelley@blackboard.com
+-- Author : Jeff Kelley, Principal Solutions Engineer, Blackboard Inc.
+--          jeff.kelley@blackboard.com
+-- Date   : 2026-07-14
+-- (c) Blackboard Inc. All rights reserved.
 -- Provided as-is, without warranty or support.
 -- ============================================================
 

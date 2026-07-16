@@ -2,7 +2,9 @@
    Copyright (c) Blackboard Inc.
    All rights reserved.
 
-   Author: Jeff Kelley
+   Author: Jeff Kelley, Principal Solutions Engineer, Blackboard Inc.
+           jeff.kelley@blackboard.com
+   Date:   2026-03-25
 
    Description:
      Generates Snapshot-SIS-like COURSE_MEMBERSHIP extracts based on available
