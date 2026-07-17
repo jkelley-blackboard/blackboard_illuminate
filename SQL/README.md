@@ -35,7 +35,7 @@ See [Data_Monitoring/](Data_Monitoring/README.md) for CDM insert-freshness monit
 | `instructor_discussion_submissions.sql` | Instructor discussion-forum submissions for a specific course and date range. Parameterized with `{course_number}`, `{start_date}`, `{end_date}`. |
 | `deleted_items_audit.sql` | Course item deletion audit — deleted items with creator, item type, timestamps, and deletion date. |
 | `CTE_for_merged_enrollments.sql` | Reusable CTE that maps a student's enrollment in a merged/child course shell back to their parent-course enrollment. |
-| `ally_instructor_fixes_by_course_user.sql` | Ally accessibility fixes made through the Instructor Feedback panel, aggregated by course and user, with fix counts and score-change stats. Header includes caveats on ambiguous user ID formats worth reading before trusting results. |
+| `ally_instructor_fixes_by_course_user.sql` | Ally accessibility fixes made through the Instructor Feedback panel, aggregated by course and user, with fix counts, score-change stats, and a `report_open_count` column (course Accessibility Report opens — attached to existing fix rows, not a separate grain). Header includes caveats on ambiguous user ID formats worth reading before trusting results. See the [Ally Events Guide](https://github.com/jkelley-blackboard/blackboard_illuminate/blob/main/docs/Ally_Events_Guide.md) for the full `event_type`/`DATA` catalog this query draws from. |
 | `collaborate_recording_report_20220908.sql` | Collaborate recording metadata (name, link, duration, size, download/playback counts) in a format matching Blackboard's own Recording Report, for use with companion download/delete scripts. |
 
 ## Ultra Events & AI

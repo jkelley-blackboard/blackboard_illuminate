@@ -8,6 +8,7 @@
 - [Power BI Integration](Illuminate_PowerBI_Integration_Guide)
 - [Best Practices & Data Notes](best-practices)
 - [Activity Tracking Guide](Activity_Tracking_Guide)
+- [Ally Events Guide](Ally_Events_Guide)
 
 This site collects SQL queries, field references, and integration guides for working with **Blackboard Illuminate** analytics data in Snowflake.
 
