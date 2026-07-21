@@ -70,9 +70,8 @@ SELECT
   ci.name                  AS item_name,
   ci.item_type,
   ci.row_deleted_time      AS lms_deletion_snapshot_time,    -- when the nightly CDM_LMS snapshot first showed the item gone
-  LISTAGG(DISTINCT per.stage:user_id::text, ', ')
-    WITHIN GROUP (ORDER BY per.stage:user_id::text) AS candidate_deleters,  -- one name = confident answer; multiple = see note above
-  COUNT(DISTINCT ue.data:eventId::text) AS delete_confirm_clicks_that_day, -- distinct confirmation clicks in this course that day (not a per-item count)
+  LISTAGG(DISTINCT per.stage['user_id']::text, ', ') AS candidate_deleters,  -- one name = confident answer; multiple = see note above
+  COUNT(DISTINCT ue.data['eventId']::text) AS delete_confirm_clicks_that_day, -- distinct confirmation clicks in this course that day (not a per-item count)
   MIN(ue.event_time)       AS earliest_click_time,
   MAX(ue.event_time)       AS latest_click_time
   --, ue.data::text          -- uncomment (and remove aggregation) to examine individual event payloads
@@ -80,14 +79,14 @@ FROM CDM_LMS.course_item ci
   JOIN CDM_LMS.course cor
     ON cor.id = ci.course_id
   JOIN CDM_TLM.ultra_events ue
-    ON '_' || cor.source_id || '_1' = ue.data:contextId::text
+    ON '_' || cor.source_id || '_1' = ue.data['contextId']::text
    AND ue.event_time::date = DATE(ci.row_deleted_time) - 1   -- click happens the day before the LMS snapshot records the deletion
   LEFT JOIN CDM_LMS.person per
-    ON per.stage:uuid::text = ue.data:userId::text            -- NULL candidate likely means a preview user or other entity never snapshotted to CDM_LMS
+    ON per.stage['uuid']::text = ue.data['userId']::text      -- NULL candidate likely means a preview user or other entity never snapshotted to CDM_LMS
 WHERE ci.row_deleted_time IS NOT NULL          -- only deleted items
   AND cor.course_number LIKE '%'               -- select course(s) by Blackboard course id
   AND ci.name LIKE '%'                         -- narrow to a specific item name if known
-  AND ue.data:objectId::text IN (
+  AND ue.data['objectId']::text IN (
         'components.directives.content-item-base.overflowMenu.confirm.button',           -- single-item delete confirmation
         'course.content.bulkEdit.panelFooter.dialog.dialogFooter.confirmButton.delete'    -- bulk-edit delete confirmation
       )
