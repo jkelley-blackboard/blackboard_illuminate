@@ -2,9 +2,9 @@
 -- Ultra Activity Audit — Example: Who Deleted a Course Item
 -- Companion to deleted_items_audit.sql: CDM_LMS.course_item only
 -- records who *created* an item (person_id), not who deleted it.
--- This query uses Ultra Events telemetry to identify the user (and
--- click) behind a content deletion that deleted_items_audit.sql
--- can't answer on its own.
+-- This query uses Ultra Events telemetry to identify the user(s)
+-- behind a content deletion that deleted_items_audit.sql can't
+-- answer on its own.
 --
 -- Author : Jeff Kelley, Principal Solutions Engineer, Blackboard Inc.
 --          jeff.kelley@blackboard.com
@@ -28,15 +28,28 @@
 --     3. course.content.bulkEdit.panelFooter.actions.delete  — clicks the delete action on the bulk-edit panel
 --     4. course.content.bulkEdit.panelFooter.dialog.dialogFooter.confirmButton.delete  <- filtered on below
 --
--- This query filters on both confirmation tags (2 and 4). The two are
--- not otherwise ambiguous with each other: the bulk-edit confirm tag
--- names "delete" explicitly, and the single-item confirm tag is
--- disambiguated by the course + day-of join to a row known to be
--- deleted in CDM_LMS rather than by the tag alone (it's shared by the
--- overflow menu's confirmation dialog generally). One bulk-delete
--- click can account for multiple deleted items on the same day —
--- that shows up here as the same click_time repeated across several
--- item_name rows, which is expected fan-out, not a duplicate bug.
+-- WHY THIS QUERY CANNOT PIN ONE CLICK TO ONE ITEM: confirmed against
+-- real telemetry, both confirmation events carry an empty
+-- interactionContext — the click payload never names *which* item was
+-- deleted, only the course (contextId). And CDM_LMS.course_item's
+-- row_deleted_time is snapshot-day granularity: every item deleted on
+-- the same calendar day gets the exact same timestamp (the nightly
+-- snapshot run), not the moment it was actually deleted. So there is
+-- no key, in either table, that ties a specific item to a specific
+-- click — only "this course, this day" is knowable.
+--
+-- Rather than fake a row-level join (which silently cross-multiplies
+-- every item deleted that day against every delete-confirmation click
+-- that day — e.g. 13 items x 3 single-item clicks = 39 misleading
+-- rows, each implying a pairing that isn't real), this query
+-- aggregates to what the data actually supports: per deleted item,
+-- the set of users who confirmed *a* deletion in that course that
+-- day, and how many confirmation clicks happened. One candidate is a
+-- confident answer. More than one means the day had multiple deleters
+-- active and you cannot tell from this data alone who deleted which
+-- item — cross-check IP address / sessionId / interactionUrl timing
+-- via the commented-out ue.data::text column, or narrow the course/
+-- item filters to isolate a single incident.
 --
 -- NOTE ON THE TIME WINDOW: CDM_LMS refreshes overnight, so
 -- ci.row_deleted_time reflects when the nightly snapshot first
@@ -53,15 +66,16 @@
 -- ============================================================
 
 SELECT
-  per.stage:user_id::text  AS clicked_by,                    -- NULL here likely means a preview user or other entity never snapshotted to CDM_LMS
   cor.course_number        AS bb_course_id,
   ci.name                  AS item_name,
   ci.item_type,
   ci.row_deleted_time      AS lms_deletion_snapshot_time,    -- when the nightly CDM_LMS snapshot first showed the item gone
-  ue.event_type,
-  ue.data:objectId::text   AS objectId,
-  ue.event_time            AS click_time,
-  --ue.data::text           -- uncomment to examine the full data object
+  LISTAGG(DISTINCT per.stage:user_id::text, ', ')
+    WITHIN GROUP (ORDER BY per.stage:user_id::text) AS candidate_deleters,  -- one name = confident answer; multiple = see note above
+  COUNT(DISTINCT ue.data:eventId::text) AS delete_confirm_clicks_that_day, -- distinct confirmation clicks in this course that day (not a per-item count)
+  MIN(ue.event_time)       AS earliest_click_time,
+  MAX(ue.event_time)       AS latest_click_time
+  --, ue.data::text          -- uncomment (and remove aggregation) to examine individual event payloads
 FROM CDM_LMS.course_item ci
   JOIN CDM_LMS.course cor
     ON cor.id = ci.course_id
@@ -69,7 +83,7 @@ FROM CDM_LMS.course_item ci
     ON '_' || cor.source_id || '_1' = ue.data:contextId::text
    AND ue.event_time::date = DATE(ci.row_deleted_time) - 1   -- click happens the day before the LMS snapshot records the deletion
   LEFT JOIN CDM_LMS.person per
-    ON per.stage:uuid::text = ue.data:userId::text
+    ON per.stage:uuid::text = ue.data:userId::text            -- NULL candidate likely means a preview user or other entity never snapshotted to CDM_LMS
 WHERE ci.row_deleted_time IS NOT NULL          -- only deleted items
   AND cor.course_number LIKE '%'               -- select course(s) by Blackboard course id
   AND ci.name LIKE '%'                         -- narrow to a specific item name if known
@@ -77,4 +91,5 @@ WHERE ci.row_deleted_time IS NOT NULL          -- only deleted items
         'components.directives.content-item-base.overflowMenu.confirm.button',           -- single-item delete confirmation
         'course.content.bulkEdit.panelFooter.dialog.dialogFooter.confirmButton.delete'    -- bulk-edit delete confirmation
       )
-ORDER BY ci.row_deleted_time DESC, ue.event_time DESC;
+GROUP BY cor.course_number, ci.name, ci.item_type, ci.row_deleted_time
+ORDER BY ci.row_deleted_time DESC;

@@ -43,7 +43,7 @@ See [Data_Monitoring/](Data_Monitoring/README.md) for CDM insert-freshness monit
 | File | Description |
 |---|---|
 | `ultra_activity_audit_example_courseConvert.sql` | Example template for auditing a specific Ultra Events analytics tag — as written, who clicked "Convert to Ultra" in a course. |
-| `ultra_activity_audit_example_itemDelete.sql` | Companion to `deleted_items_audit.sql` — that query only shows who *created* a deleted item, not who deleted it. Filters Ultra Events telemetry to the delete-confirmation click of either UI flow (single-item overflow menu, or bulk-edit), time-windowed against the overnight `CDM_LMS` snapshot, to identify the deleting user. |
+| `ultra_activity_audit_example_itemDelete.sql` | Companion to `deleted_items_audit.sql` — that query only shows who *created* a deleted item, not who deleted it. Aggregates Ultra Events delete-confirmation clicks (single-item or bulk-edit) by course/day to surface candidate deleters per item; header explains why the telemetry can't be joined at item-level precision and how to read multiple-candidate results. |
 | `AI_Conversations.sql` | Instructors who have at least one AI Conversation-type assessment question in an Ultra course. |
 | `AI_Conversation_Use_Counter.sql` | Per-course count of AI Conversation "send" click events and distinct assessments used, from Ultra Events telemetry. |
 
