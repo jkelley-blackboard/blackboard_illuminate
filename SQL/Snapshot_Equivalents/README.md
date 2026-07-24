@@ -14,6 +14,13 @@ The scripts support common Snapshot object types, including:
 
 ---
 
+## Reference
+
+Unofficial Snapshot SIS object specs (field lists, formats, headers) are maintained at:
+https://github.com/jkelley-blackboard/Blackboard-SIS-Integration-Resources/blob/main/snapshot/specs/
+
+---
+
 ## Important Notes
 
 - These SQL files generate **Snapshot-like outputs**, not Blackboard-generated Snapshot files.
