@@ -11,12 +11,18 @@
 -- SUBMISSION.ITEM_TYPE values:
 --   TEST             = resource/x-bb-asmt-test-link
 --   DISCUSSION_FORUM = resource/x-bb-forumlink
+--   JOURNAL          = resource/x-bb-journallink
 --
 -- Author : Jeff Kelley, Principal Solutions Engineer, Blackboard Inc.
 --          jeff.kelley@blackboard.com
 -- Date   : 2026-04-24
 -- © Blackboard Inc. All rights reserved.
 -- Provided as-is without support or warranty of any kind.
+--
+-- Changes:
+--   2026-07-28 - Added JOURNAL submission metrics; reordered output
+--                columns to course, user, membership/engagement, then
+--                total and per-item-type submission counts.
 -- ============================================================
 
 WITH
@@ -77,6 +83,11 @@ submissions AS (
       , COUNT(CASE WHEN s.ITEM_TYPE = 'DISCUSSION_FORUM'
             THEN 1 END)                         AS total_discussion_submissions
 
+      , MAX(CASE WHEN s.ITEM_TYPE = 'JOURNAL'
+            THEN s.SUBMITTED_TIME END)          AS most_recent_journal_submission
+      , COUNT(CASE WHEN s.ITEM_TYPE = 'JOURNAL'
+            THEN 1 END)                         AS total_journal_submissions
+
       , MAX(s.SUBMITTED_TIME)                   AS most_recent_submission
       , COUNT(*)                                AS total_submissions
 
@@ -118,28 +129,35 @@ course_engagement AS (
 
 -- ── Final output ────────────────────────────────────────────
 SELECT
-    e.FIRST_NAME
+    -- Course fields
+    e.COURSE_ID
+  , e.COURSE_BATCH_UID
+
+    -- User fields
+  , e.FIRST_NAME
   , e.LAST_NAME
   , e.USER_ID
   , e.STUDENT_BATCH_UID
+
+    -- Membership fields
   , CASE WHEN e.AVAILABLE_IND THEN 'Y' ELSE 'N' END   AS available_in_system
-  , e.COURSE_ID
-  , e.COURSE_BATCH_UID
-
-    -- Submission activity
-  , s.MOST_RECENT_TEST_SUBMISSION
-  , COALESCE(s.TOTAL_TEST_SUBMISSIONS, 0)              AS total_test_submissions
-  , s.MOST_RECENT_DISCUSSION_SUBMISSION
-  , COALESCE(s.TOTAL_DISCUSSION_SUBMISSIONS, 0)        AS total_discussion_board_submissions
-  , s.MOST_RECENT_SUBMISSION
-  , COALESCE(s.TOTAL_SUBMISSIONS, 0)                   AS total_submissions
-
-    -- Engagement metrics
   , ll.LAST_LOGIN_TIME
   , ce.LAST_COURSE_ACCESS
   , COALESCE(ce.TOTAL_DURATION_SECONDS, 0)             AS total_time_in_course_seconds
   , ROUND(COALESCE(ce.TOTAL_DURATION_SECONDS, 0) / 60, 1) AS total_time_in_course_minutes
   , COALESCE(ce.TOTAL_INTERACTIONS, 0)                 AS total_interactions
+
+    -- Total submissions (all item types)
+  , s.MOST_RECENT_SUBMISSION
+  , COALESCE(s.TOTAL_SUBMISSIONS, 0)                   AS total_submissions
+
+    -- Submissions by item type
+  , s.MOST_RECENT_TEST_SUBMISSION
+  , COALESCE(s.TOTAL_TEST_SUBMISSIONS, 0)              AS total_test_submissions
+  , s.MOST_RECENT_DISCUSSION_SUBMISSION
+  , COALESCE(s.TOTAL_DISCUSSION_SUBMISSIONS, 0)        AS total_discussion_board_submissions
+  , s.MOST_RECENT_JOURNAL_SUBMISSION
+  , COALESCE(s.TOTAL_JOURNAL_SUBMISSIONS, 0)           AS total_journal_submissions
 
 FROM enrollments                    e
 LEFT JOIN submissions               s   ON s.PERSON_COURSE_ID  = e.PERSON_COURSE_ID
