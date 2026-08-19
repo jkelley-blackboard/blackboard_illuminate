@@ -23,6 +23,8 @@
 --   2026-07-28 - Added JOURNAL submission metrics; reordered output
 --                columns to course, user, membership/engagement, then
 --                total and per-item-type submission counts.
+--   2026-08-19 - Added available_in_course (Y/N, from PERSON_COURSE.ACTIVE),
+--                distinct from the existing person-level available_in_system.
 -- ============================================================
 
 WITH
@@ -51,6 +53,7 @@ enrollments AS (
       , p.STAGE:user_id::STRING                 AS user_id
       , p.STAGE:batch_uid::STRING               AS student_batch_uid
       , p.AVAILABLE_IND
+      , pc.ACTIVE                                AS course_membership_active
       , c.COURSE_NUMBER                         AS course_id
       , c.STAGE:batch_uid::STRING               AS course_batch_uid
       , c.TERM_ID
@@ -140,6 +143,7 @@ SELECT
   , e.STUDENT_BATCH_UID
 
     -- Membership fields
+  , CASE WHEN e.COURSE_MEMBERSHIP_ACTIVE = 1 THEN 'Y' ELSE 'N' END  AS available_in_course
   , CASE WHEN e.AVAILABLE_IND THEN 'Y' ELSE 'N' END   AS available_in_system
   , ll.LAST_LOGIN_TIME
   , ce.LAST_COURSE_ACCESS
