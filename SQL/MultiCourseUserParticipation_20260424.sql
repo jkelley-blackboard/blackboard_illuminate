@@ -25,6 +25,9 @@
 --                total and per-item-type submission counts.
 --   2026-08-19 - Added available_in_course (Y/N, from PERSON_COURSE.ACTIVE),
 --                distinct from the existing person-level available_in_system.
+--   2026-08-19 - Excluded child courses (COURSE_PARENT_ID IS NOT NULL) from
+--                merged/cross-listed sets; report now reflects parent
+--                courses only.
 -- ============================================================
 
 WITH
@@ -67,6 +70,7 @@ enrollments AS (
       AND p.ROW_DELETED_TIME     IS NULL
       AND c.ROW_DELETED_TIME     IS NULL
       AND t.ROW_DELETED_TIME     IS NULL
+      AND c.COURSE_PARENT_ID     IS NULL
       AND (params.term_name IS NULL
            OR t.NAME = params.term_name)
 ),
