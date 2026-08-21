@@ -1,16 +1,20 @@
 -- ============================================================
 -- Basic User Activity Tracking — Last System Login
+--
 -- Source : CDM_LMS.SESSION_ACTIVITY
 -- Grain  : Multiple rows per person over time; aggregated here
 --          to one row per person (most recent login).
 -- Purpose: Simplest possible "when did this user last log in"
 --          query — system-wide, not scoped to a course.
 -- See    : docs/Activity_Tracking_Guide.md
--- Author : Jeff Kelley, Principal Solutions Engineer, Blackboard Inc.
---          jeff.kelley@blackboard.com
--- Date   : 2026-07-14
+--
+-- Author  : Jeff Kelley, Principal Solutions Engineer, Blackboard Inc.
+--           jeff.kelley@blackboard.com
+-- Date    : 2026-07-14
+-- Updated : 2026-08-21 -- standardized header spacing/alignment and
+--           disclaimer wording to match the convention used repo-wide.
 -- (c) Blackboard Inc. All rights reserved.
--- Provided as-is, without warranty or support.
+-- Provided as-is without support or warranty of any kind.
 -- ============================================================
 
 SELECT

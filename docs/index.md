@@ -4,6 +4,7 @@
 
 ### Navigation
 
+- [What You Can Find in Illuminate](Data_Coverage_Guide)
 - [Snowflake Connection Info](Illuminate_Snowflake_Connection_Info)
 - [Power BI Integration](Illuminate_PowerBI_Integration_Guide)
 - [Best Practices & Data Notes](best-practices)

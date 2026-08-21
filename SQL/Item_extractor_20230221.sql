@@ -1,15 +1,39 @@
-/*
-  Grade Item Extract
-    for every enrollment in select courses
-    provides grade performance and date for item selected by name
-    if the item doesn't exist or the user has no attempt/grade returns null row
+-- ============================================================
+-- Grade Item Extract
+--
+-- For every enrollment in select courses, provides grade performance
+-- and date for a single item selected by name. If the item doesn't
+-- exist for a course or the user has no attempt/grade, returns a
+-- null row for that enrollment (LEFT JOIN to the grade subquery --
+-- switch to an inner JOIN there if you only want enrollments that
+-- actually have a grade for the item).
+--
+-- Author  : Jeff Kelley, Principal Solutions Engineer, Blackboard Inc.
+--           jeff.kelley@blackboard.com
+-- Date    : 2023-02-21
+-- Updated : 2026-08-21 -- moved the item name / course pattern / term
+--           name into a params CTE at the top; replaced
+--           pcr.course_role_desc = 'Student' with the CDM-normalized
+--           pcr.course_role = 'S' used elsewhere in this repo; added
+--           pcr.row_deleted_time and pcr.active (this file previously
+--           checked only pcr.enabled_ind, missing both the deletion
+--           check and the availability half of "active"); added
+--           crs.row_deleted_time; and corrected a comment that
+--           claimed grd.row_deleted_time filtered out deleted
+--           courses/users/enrollments -- it only filters deleted
+--           grade rows, nothing else.
+-- (c) Blackboard Inc. All rights reserved.
+-- Provided as-is without support or warranty of any kind.
+-- ============================================================
 
-  Author : Jeff Kelley, Principal Solutions Engineer, Blackboard Inc.
-           jeff.kelley@blackboard.com
-  Date   : 2023-02-21
-  (c) Blackboard Inc. All rights reserved.
-  Provided as-is without support or warranty of any kind.
-*/
+WITH params AS (
+    SELECT
+        'Points'::VARCHAR                  AS item_name,         -- the gradebook item name, matched across courses
+        '%FINANCE_MASTER_RANDALL%'::VARCHAR AS course_number_pattern,
+        '2026 Spring'::VARCHAR             AS term_name
+    -- demo values above return real rows against the Illuminate demo tenant
+    -- (verified 2026-08-21); swap in your own item/course/term to reuse.
+)
 
 SELECT
   term.name AS term,
@@ -21,12 +45,13 @@ SELECT
   grades.percent,
   grades.attempts,
   grades.last_attempt
-  
+
 FROM CDM_LMS.person_course pcr
+   CROSS JOIN params
    JOIN CDM_LMS.person per ON per.id = pcr.person_id
    JOIN CDM_LMS.course crs ON crs.id = pcr.course_id
    LEFT JOIN CDM_LMS.term term ON term.id = crs.term_id
-   LEFT JOIN (                     --change to regular JOIN to filter out nulls                   
+   LEFT JOIN (                     --change to regular JOIN to filter out nulls
      SELECT                        --subquery to get grade data
        grd.person_course_id,
        gbk.name AS item_name,
@@ -35,15 +60,18 @@ FROM CDM_LMS.person_course pcr
        grd.last_attempted_time AS last_attempt
      FROM CDM_LMS.grade grd
        JOIN CDM_LMS.gradebook gbk ON gbk.id = grd.gradebook_id
-     WHERE gbk.name = 'Test 1: Solar System'      --the name of the item accross courses
+       CROSS JOIN params
+     WHERE gbk.name = params.item_name
        AND NOT gbk.deleted_ind
-       AND grd.row_deleted_time IS NULL           --this should filter out all deleted courses, users and enrollments
+       AND grd.row_deleted_time IS NULL           --excludes deleted grade rows only
      ) grades on grades.person_course_id = pcr.id
 
-WHERE pcr.enabled_ind                         --filter out disabled (dropped) enrollements
+WHERE pcr.active = 1                          --available + enabled enrollments only (supersedes the old enabled_ind-only check)
+  AND pcr.row_deleted_time IS NULL            --exclude deleted enrollments
+  AND crs.row_deleted_time IS NULL            --exclude deleted courses
   AND per.stage['user_id']::string NOT LIKE '%_previewuser'
-  AND pcr.course_role_desc = 'Student'       
-  AND crs.course_number like '%BIO101%'      --course ID filter
-  AND term.name = '2023 Spring'              --term name filter
+  AND pcr.course_role = 'S'
+  AND crs.course_number like params.course_number_pattern
+  AND term.name = params.term_name
 
 ORDER BY crs.course_number DESC

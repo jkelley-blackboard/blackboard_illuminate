@@ -4,14 +4,17 @@ Snowflake SQL queries against Blackboard Illuminate CDM data (`CDM_LMS`, `CDM_TL
 
 See [Data_Monitoring/](Data_Monitoring/README.md) for CDM insert-freshness monitoring queries, and [Snapshot_Equivalents/](Snapshot_Equivalents/README.md) for Snapshot-SIS-style extracts built from Illuminate data.
 
+🆕 = file created in the last 15 days · 🔄 = file updated in the last 15 days (per each file's own `Date`/`Updated` header). Flags are set by hand as of 2026-08-21 and age out on their own — don't expect them to stay accurate indefinitely.
+
 ## Activity & Participation
 
 | File | Description |
 |---|---|
-| `basic_login_activity.sql` | Simplest starting point: a user's last system-wide login, from `SESSION_ACTIVITY`. |
+| 🔄 `basic_login_activity.sql` | Simplest starting point: a user's last system-wide login, from `SESSION_ACTIVITY`. |
 | `basic_course_activity.sql` | Simplest starting point: one user's time and interactions in one course, from `COURSE_ACTIVITY`. |
 | `basic_user_activity_summary.sql` | Combines the two above into a minimal per-course roster with login + activity totals. See `MultiCourseUserParticipation_20260424.sql` or `student_course_summary.sql` for more complete versions. |
 | `single_user_weekly_course_activity.sql` | One user's weekly course access minutes and interactions across all their courses, for the current week. |
+| 🆕 `unique_instructors_by_term.sql` | One row per unique active instructor for a given term (deduped across their courses), with external IDs and email. |
 | `instructor_course_activity_summary.sql` | Per instructor/course/term access count, minutes, interactions, and first/last access dates. |
 | `course_org_activity_check.sql` | Flags Classic/Original courses and organizations still seeing activity, to help prioritize Ultra migration outreach. Lookback window and activity-tier thresholds are tunable via a `Params` CTE. |
 | `student_course_summary.sql` | Per-student, per-course summary combining access activity, submission counts, and grade summary. Adapted from the community `BBDN-BlackboardData-Queries/student-course-summary` script. |
@@ -23,9 +26,10 @@ See [Data_Monitoring/](Data_Monitoring/README.md) for CDM insert-freshness monit
 |---|---|
 | `Term_Grade_Stats_20260202.sql` | Per-course grade metrics for a term: student counts, gradebook item counts, final-grade stats (max/min/avg/IQR), and instructor selection logic. |
 | `Term_Grade_Stats_20260202_v2.sql` | Preferred over the file above — same report, with stricter roster filtering (excludes disabled, deleted, and preview-user enrollments). |
-| `gradecenter_use_20230317.sql` | Per-instructor grading time/interactions alongside course student count, gradebook item count, and grades-recorded count (Grade Center usage). |
+| 🆕 `instructor_gradebook_use_by_term.sql` | Per-instructor/course gradebook usage for a term: item and grade counts, Original-course grading time/interactions, and an Ultra-compatible proxy (`inst_grades_modified`/`inst_last_graded`, via `grade.modifier_person_id`) that works even where Ultra's activity tracking doesn't. |
+| 🔄 `gradecenter_use_20230317.sql` | **Deprecated** — `inst_minutes_grading`/`inst_grading_interactions` only track Original courses; Ultra always reads 0 there (see header). Superseded by `instructor_gradebook_use_by_term.sql` for any course population that may include Ultra. Kept live for its `crs_student_cnt` column and ad-hoc course-number-pattern scoping, neither of which the newer file has. |
 | `gradebook_extractor_20251219.sql` | Extracts gradebook column definitions and student roster/grade data for courses matching a batch_uid pattern. |
-| `Item_extractor_20230221.sql` | For every enrollment in selected courses, extracts grade performance (percent, attempts, last attempt date) for one specific gradebook item matched by name. |
+| 🔄 `Item_extractor_20230221.sql` | For every enrollment in selected courses, extracts grade performance (percent, attempts, last attempt date) for one specific gradebook item matched by name. Filters live in a `params` CTE at the top. |
 | `rubric-cell level results_20260424.sql` | One row per student attempt per rubric criterion cell (score, criterion name, gradebook column context). |
 
 ## Submissions & Course Content
@@ -34,9 +38,15 @@ See [Data_Monitoring/](Data_Monitoring/README.md) for CDM insert-freshness monit
 |---|---|
 | `instructor_discussion_submissions.sql` | Instructor discussion-forum submissions for a specific course and date range. Parameterized with `{course_number}`, `{start_date}`, `{end_date}`. |
 | `deleted_items_audit.sql` | Course item deletion audit — deleted items with creator, item type, timestamps, and deletion date. |
-| `CTE_for_merged_enrollments.sql` | Reusable CTE that maps a student's enrollment in a merged/child course shell back to their parent-course enrollment. |
+| 🔄 `CTE_for_merged_enrollments.sql` | Reusable CTE that maps a student's enrollment in a merged/child course shell back to their parent-course enrollment. |
 | `ally_instructor_fixes_by_course_user.sql` | Ally accessibility fixes made through the Instructor Feedback panel, aggregated by course and user, with fix counts, score-change stats, and a `report_open_count` column (course Accessibility Report opens — attached to existing fix rows, not a separate grain). Header includes caveats on ambiguous user ID formats worth reading before trusting results. See the [Ally Events Guide](https://github.com/jkelley-blackboard/blackboard_illuminate/blob/main/docs/Ally_Events_Guide.md) for the full `event_type`/`DATA` catalog this query draws from. |
 | `collaborate_recording_report_20220908.sql` | Collaborate recording metadata (name, link, duration, size, download/playback counts) in a format matching Blackboard's own Recording Report, for use with companion download/delete scripts. |
+
+## Institution Hierarchy & Integrations
+
+| File | Description |
+|---|---|
+| `course_hierarchy_export_for_jenzabar.sql` | Course-to-hierarchy export for Jenzabar: each course's visible Course ID, name, and the external key of its primary institution hierarchy node. See `SNAPSHOT_course_association.sql` for the full (non-primary-only) association list. |
 
 ## Ultra Events & AI
 
@@ -44,8 +54,8 @@ See [Data_Monitoring/](Data_Monitoring/README.md) for CDM insert-freshness monit
 |---|---|
 | `ultra_activity_audit_example_courseConvert.sql` | Example template for auditing a specific Ultra Events analytics tag — as written, who clicked "Convert to Ultra" in a course. |
 | `ultra_activity_audit_example_itemDelete.sql` | Companion to `deleted_items_audit.sql` — that query only shows who *created* a deleted item, not who deleted it. Aggregates Ultra Events delete-confirmation clicks (single-item or bulk-edit) by course/day to surface candidate deleters per item; header explains why the telemetry can't be joined at item-level precision and how to read multiple-candidate results. |
-| `AI_Conversations.sql` | Instructors who have at least one AI Conversation-type assessment question in an Ultra course. |
-| `AI_Conversation_Use_Counter.sql` | Per-course count of AI Conversation "send" click events and distinct assessments used, from Ultra Events telemetry. |
+| 🔄 `AI_Conversations.sql` | Instructors who have at least one AI Conversation-type assessment question in an Ultra course. |
+| 🔄 `AI_Conversation_Use_Counter.sql` | Per-course count of AI Conversation "send" click events and distinct assessments used, from Ultra Events telemetry. |
 
 ---
 

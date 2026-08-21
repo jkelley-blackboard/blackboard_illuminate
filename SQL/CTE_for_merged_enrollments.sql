@@ -1,14 +1,34 @@
-
-/*
-================================================================================
- Description:    Example CTE (enrollment map) to get child course information on merged courses.
- Author:         Jeff Kelley, Principal Solutions Engineer, Blackboard Inc.
-                 jeff.kelley@blackboard.com
- Date:           2025-11-20
- (c) Blackboard Inc. All rights reserved.
- Provided as-is without support or warranty of any kind.
-================================================================================
-*/
+-- ============================================================
+-- CTE for Merged Enrollments
+--
+-- EXAMPLE / ILLUSTRATIVE ONLY -- demonstrates the join pattern for
+-- mapping a merged course's child-course enrollment back to its
+-- parent-course enrollment for the same person. This is deliberately
+-- minimal and is missing checks a production report would want:
+--   - No row_deleted_time / enabled_ind / active filter anywhere in
+--     the outer (final) query -- deleted enrollments and deleted
+--     courses can appear in the output as written.
+--   - enrollment_map filters the CHILD enrollment to course_role_
+--     source_code = 'S', but never checks the PARENT enrollment's
+--     role or active/deleted state -- a person who is a student in
+--     the child course but a different role (or soft-deleted) in the
+--     parent course will still register as a merged-enrollment match.
+--   - Uses course_role_source_code (raw Learn code) in one place
+--     instead of the CDM-normalized course_role used elsewhere in
+--     this repo; for 'S' they happen to coincide, but that's not
+--     guaranteed for every role.
+-- Add the filters relevant to your use case before running this
+-- against real reporting.
+--
+-- Author  : Jeff Kelley, Principal Solutions Engineer, Blackboard Inc.
+--           jeff.kelley@blackboard.com
+-- Date    : 2025-11-20
+-- Updated : 2026-08-21 -- converted header to the repo-wide standard and
+--           added the EXAMPLE/ILLUSTRATIVE caveat above documenting the
+--           filters this file intentionally omits; logic unchanged.
+-- (c) Blackboard Inc. All rights reserved.
+-- Provided as-is without support or warranty of any kind.
+-- ============================================================
 
 WITH enrollment_map AS (
     SELECT
