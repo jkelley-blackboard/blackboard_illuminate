@@ -26,9 +26,9 @@ SELECT
     p.institution_role_source_code      AS "INSTITUTION_ROLE",
     CASE
         WHEN p.system_role_source_code = 'N' THEN 'none'
-        WHEN p.system_role_source_code = 'Z' THEN 'system_administrator'
+        WHEN p.system_role_source_code = 'Z' THEN 'system_admin'
         WHEN p.system_role_source_code = 'O' THEN 'observer'
-        WHEN p.system_role_source_code = 'U' THEN 'user_administrator'
+        WHEN p.system_role_source_code = 'U' THEN 'guest'
         ELSE 'lookup:' || p.system_role_source_code
     END                                 AS "SYSTEM_ROLE",   -- limited mapping
     CASE
