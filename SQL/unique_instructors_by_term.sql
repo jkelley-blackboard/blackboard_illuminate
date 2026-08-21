@@ -3,10 +3,11 @@
 --
 -- Returns one row per unique person who holds an active instructor
 -- membership (COURSE_ROLE = 'I', ACTIVE = 1) in any course belonging
--- to the specified term. Excludes soft-deleted memberships and
--- courses (a deleted person record implies a deleted membership, so
--- no separate PERSON.ROW_DELETED_TIME check is needed). An instructor
--- teaching multiple courses in the term is returned once.
+-- to the specified term, and whose person record is available
+-- (PERSON.AVAILABLE_IND = TRUE). Excludes soft-deleted memberships (a
+-- deleted person or course implies a deleted membership, so no
+-- separate PERSON/COURSE.ROW_DELETED_TIME check is needed). An
+-- instructor teaching multiple courses in the term is returned once.
 --
 -- Author : Jeff Kelley, Principal Solutions Engineer, Blackboard Inc.
 --          jeff.kelley@blackboard.com
@@ -34,5 +35,5 @@ CROSS JOIN params
 WHERE pc.course_role       = 'I'         -- instructors only
   AND pc.active             = 1          -- available + enabled enrollments only
   AND pc.row_deleted_time  IS NULL       -- exclude deleted memberships
-  AND cor.row_deleted_time IS NULL       -- exclude deleted courses
+  AND per.available_ind     = TRUE       -- exclude unavailable person records
   AND trm.name = params.term_name;
