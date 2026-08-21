@@ -2,12 +2,16 @@
 -- Unique Instructors for a Specific Term
 --
 -- Returns one row per unique person who holds an active instructor
--- membership (COURSE_ROLE = 'I', ACTIVE = 1) in any course belonging
--- to the specified term, and whose person record is available
--- (PERSON.AVAILABLE_IND = TRUE). Excludes soft-deleted memberships (a
--- deleted person or course implies a deleted membership, so no
--- separate PERSON/COURSE.ROW_DELETED_TIME check is needed). An
--- instructor teaching multiple courses in the term is returned once.
+-- membership (COURSE_ROLE = 'I', ACTIVE = 1) in an enabled course
+-- belonging to the specified term, and whose person record is both
+-- available and enabled. Neither PERSON nor COURSE has a derived
+-- ACTIVE column (unlike PERSON_COURSE), so their AVAILABLE_IND/
+-- ENABLED_IND flags are checked explicitly; course availability is
+-- ignored deliberately since it doesn't affect instructor access.
+-- Excludes soft-deleted memberships (a deleted person or course
+-- implies a deleted membership, so no separate PERSON/COURSE.
+-- ROW_DELETED_TIME check is needed). An instructor teaching multiple
+-- courses in the term is returned once.
 --
 -- Author : Jeff Kelley, Principal Solutions Engineer, Blackboard Inc.
 --          jeff.kelley@blackboard.com
@@ -36,4 +40,6 @@ WHERE pc.course_role       = 'I'         -- instructors only
   AND pc.active             = 1          -- available + enabled enrollments only
   AND pc.row_deleted_time  IS NULL       -- exclude deleted memberships
   AND per.available_ind     = TRUE       -- exclude unavailable person records
+  AND per.enabled_ind       = TRUE       -- exclude disabled person records
+  AND cor.enabled_ind       = TRUE       -- exclude disabled courses (availability doesn't matter here)
   AND trm.name = params.term_name;
