@@ -1,11 +1,12 @@
 -- ============================================================
 -- Unique Instructors for a Specific Term
 --
--- Returns one row per unique person who holds an instructor
--- membership (COURSE_ROLE = 'I') in any course belonging to the
--- specified term. Excludes soft-deleted memberships, courses, and
--- person records. An instructor teaching multiple courses in the
--- term is returned once.
+-- Returns one row per unique person who holds an active instructor
+-- membership (COURSE_ROLE = 'I', ACTIVE = 1) in any course belonging
+-- to the specified term. Excludes soft-deleted memberships and
+-- courses (a deleted person record implies a deleted membership, so
+-- no separate PERSON.ROW_DELETED_TIME check is needed). An instructor
+-- teaching multiple courses in the term is returned once.
 --
 -- Author : Jeff Kelley, Principal Solutions Engineer, Blackboard Inc.
 --          jeff.kelley@blackboard.com
@@ -31,7 +32,7 @@ JOIN cdm_lms.term   trm ON trm.id = cor.term_id
 CROSS JOIN params
 
 WHERE pc.course_role       = 'I'         -- instructors only
+  AND pc.active             = 1          -- available + enabled enrollments only
   AND pc.row_deleted_time  IS NULL       -- exclude deleted memberships
   AND cor.row_deleted_time IS NULL       -- exclude deleted courses
-  AND per.row_deleted_time IS NULL       -- exclude deleted users
   AND trm.name = params.term_name;
