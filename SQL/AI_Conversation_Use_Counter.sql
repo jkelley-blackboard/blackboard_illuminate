@@ -2,8 +2,10 @@
 -- AI Conversation Use Counter
 --
 -- Click count and unique-assessment count for AI Conversations in
--- Blackboard Ultra, per course, from ai.chat.chat.controls.send
--- events in ULTRA_EVENTS.
+-- Blackboard Ultra, per course, from AI chat send events in
+-- ULTRA_EVENTS. The send button's analytics id was renamed in 2026
+-- (old id last seen 2026-06-23, new id from 2026-09-30), so both are
+-- counted.
 --
 -- Author  : Jeff Kelley, Principal Solutions Engineer, Blackboard Inc.
 --           jeff.kelley@blackboard.com
@@ -11,14 +13,18 @@
 -- Updated : 2026-08-21 -- moved the AI-chat-send event id and the activity
 --           start date into a params CTE at the top, matching the
 --           convention established in AI_Conversations.sql.
+-- Updated : 2026-10-21 -- added the new send id
+--           ai.chat.conversation.dialog.sendButton alongside
+--           ai.chat.chat.controls.send.
 -- (c) Blackboard Inc. All rights reserved.
 -- Provided as-is without support or warranty of any kind.
 -- ============================================================
 
 WITH params AS (
     SELECT
-        'ai.chat.chat.controls.send'::VARCHAR AS ai_chat_send_object_id,
-        '2025-08-01'::DATE                    AS activity_start_date   -- edit to change the reporting window
+        'ai.chat.chat.controls.send'::VARCHAR             AS ai_chat_send_object_id,      -- through mid-2026
+        'ai.chat.conversation.dialog.sendButton'::VARCHAR AS ai_chat_send_object_id_new,  -- from 2026-09-30
+        '2025-08-01'::DATE                                AS activity_start_date   -- edit to change the reporting window
 )
 
 SELECT
@@ -37,7 +43,8 @@ JOIN CDM_LMS.course crs
       ue.data:contextId::string, '[0-9]+'                   -- Extract course source ID from contextId
   )
 
-WHERE ue.data:objectId::string = params.ai_chat_send_object_id -- Filter for AI chat send button clicks
+WHERE ue.data:objectId::string IN (params.ai_chat_send_object_id,
+                                   params.ai_chat_send_object_id_new) -- Filter for AI chat send button clicks
   AND ue.event_time > params.activity_start_date
 
 GROUP BY crs.course_number
