@@ -1,11 +1,24 @@
 -- ============================================================
 -- AI Conversation Use Counter
 --
--- Click count and unique-assessment count for AI Conversations in
--- Blackboard Ultra, per course, from AI chat send events in
--- ULTRA_EVENTS. The send button's analytics id was renamed in 2026
--- (old id last seen 2026-06-23, new id from 2026-09-30), so both are
--- counted.
+-- Student message count and unique-assessment count for AI
+-- Conversations in Blackboard Ultra, per course, from AI chat send
+-- events in ULTRA_EVENTS. The send button's analytics id was renamed
+-- in 2026 (old id last seen 2026-06-23, new id from 2026-09-30), so
+-- both are counted.
+--
+-- Student Preview exclusion: an instructor using Student Preview fires
+-- the same send events a student does, but ULTRA_EVENTS logs them in
+-- one of two ways:
+--   1. Under the INSTRUCTOR's own userId. These are removed by
+--      requiring a student (course_role = 'S') membership in the
+--      course.
+--   2. Under the <instructor>_previewuser account. That account has a
+--      student membership, so it passes the role check and is removed
+--      by the user_id filter instead.
+-- Both filters are needed; either one alone leaves preview activity in.
+-- Side effect: events from a user whose membership hasn't loaded into
+-- CDM_LMS yet are also dropped, so very recent activity may undercount.
 --
 -- Author  : Jeff Kelley, Principal Solutions Engineer, Blackboard Inc.
 --           jeff.kelley@blackboard.com
@@ -16,6 +29,10 @@
 -- Updated : 2026-10-21 -- added the new send id
 --           ai.chat.conversation.dialog.sendButton alongside
 --           ai.chat.chat.controls.send.
+-- Updated : 2026-10-21 -- excluded Student Preview activity (see above)
+--           by joining the event's userId to a student membership in
+--           the course and dropping _previewuser accounts; renamed
+--           total_clicks to total_messages.
 -- (c) Blackboard Inc. All rights reserved.
 -- Provided as-is without support or warranty of any kind.
 -- ============================================================
@@ -29,7 +46,7 @@ WITH params AS (
 
 SELECT
     crs.course_number AS course_id,                          -- Course identifier
-    COUNT(*) AS total_clicks,                                -- Total number of AI chat send events
+    COUNT(*) AS total_messages,                              -- Student AI chat messages sent (one send event per message)
     COUNT(DISTINCT REGEXP_SUBSTR(
         ue.data:interactionUrl::string,                      -- Extract assessment ID from interaction URL
         '/assessment/(_[0-9]+_[0-9]+)',                      -- Regex pattern for Ultra assessment ID
@@ -42,10 +59,21 @@ JOIN CDM_LMS.course crs
   ON crs.source_id = REGEXP_SUBSTR(
       ue.data:contextId::string, '[0-9]+'                   -- Extract course source ID from contextId
   )
+JOIN CDM_LMS.person per
+  ON per.stage['uuid']::text = ue.data:userId::text         -- ULTRA_EVENTS userId is the person uuid
+JOIN CDM_LMS.person_course pc
+  ON pc.person_id = per.id
+ AND pc.course_id = crs.id
 
 WHERE ue.data:objectId::string IN (params.ai_chat_send_object_id,
                                    params.ai_chat_send_object_id_new) -- Filter for AI chat send button clicks
   AND ue.event_time > params.activity_start_date
+  -- Student Preview exclusion, part 1: preview clicks logged under the
+  -- instructor's userId join to an instructor membership, not 'S'.
+  AND pc.course_role = 'S'
+  -- Student Preview exclusion, part 2: preview clicks logged under the
+  -- preview account itself (user_id ends in _previewuser).
+  AND per.stage['user_id']::text NOT ILIKE '%previewuser'
 
 GROUP BY crs.course_number
-ORDER BY total_clicks DESC;
+ORDER BY total_messages DESC;
