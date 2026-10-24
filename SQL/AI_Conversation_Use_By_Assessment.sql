@@ -22,6 +22,14 @@
 -- Side effect: events from a user whose membership hasn't loaded into
 -- CDM_LMS yet are also dropped, so very recent activity may undercount.
 --
+-- Soft deletes: include_deleted_assessments and include_deleted_memberships
+-- both default to FALSE (active only). An assessment that hasn't loaded into
+-- COURSE_ITEM has no deletion time and is always kept. Memberships are
+-- reduced to one per person per course (the live one if there is one,
+-- otherwise the most recently deleted) before the role check, so a student
+-- dropped and re-added isn't counted twice, and an instructor with an old
+-- deleted student membership doesn't pass as a student.
+--
 -- Assessment name and deletion time come from CDM_LMS.COURSE_ITEM,
 -- matched through stage:course_contents_pk1_list. They are NULL when
 -- the assessment hasn't loaded into COURSE_ITEM yet.
@@ -46,7 +54,19 @@ WITH params AS (
     SELECT
         'ai.chat.chat.controls.send'::VARCHAR             AS ai_chat_send_object_id,      -- through mid-2026
         'ai.chat.conversation.dialog.sendButton'::VARCHAR AS ai_chat_send_object_id_new,  -- from 2026-09-30
-        '2025-08-01'::DATE                                AS activity_start_date   -- edit to change the reporting window
+        '2025-08-01'::DATE                                AS activity_start_date,  -- edit to change the reporting window
+        FALSE                                             AS include_deleted_assessments,  -- TRUE keeps assessments deleted in COURSE_ITEM
+        FALSE                                             AS include_deleted_memberships   -- TRUE keeps dropped/removed enrollments
+),
+
+-- One membership per person per course, live first (see header)
+memberships AS (
+    SELECT pc.person_id, pc.course_id, pc.course_role
+    FROM CDM_LMS.person_course pc
+    CROSS JOIN params
+    WHERE params.include_deleted_memberships OR pc.row_deleted_time IS NULL
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY pc.course_id, pc.person_id
+                               ORDER BY pc.row_deleted_time DESC NULLS FIRST) = 1
 ),
 
 -- One row per assessment content id, so the name lookup can't duplicate events
@@ -92,7 +112,7 @@ student_sends AS (
       )
     JOIN CDM_LMS.person per
       ON per.stage['uuid']::text = ue.data:userId::text     -- ULTRA_EVENTS userId is the person uuid
-    JOIN CDM_LMS.person_course pc
+    JOIN memberships pc
       ON pc.person_id = per.id
      AND pc.course_id = crs.id
     WHERE ue.data:objectId::string IN (params.ai_chat_send_object_id,
@@ -117,11 +137,13 @@ SELECT
     MIN(s.event_time)               AS first_message,
     MAX(s.event_time)               AS last_message
 FROM student_sends s
+CROSS JOIN params
 LEFT JOIN assessment_names n
   ON n.assessment_id = s.assessment_id
 LEFT JOIN creators c
   ON c.assessment_id = s.assessment_id
 LEFT JOIN CDM_LMS.person cp
   ON cp.stage['uuid']::text = c.creator_uuid
+WHERE params.include_deleted_assessments OR n.assessment_deleted_time IS NULL
 GROUP BY s.course_number, s.assessment_id, n.assessment_name, n.assessment_deleted_time, cp.stage['user_id']::text
 ORDER BY course_id, total_messages DESC;
