@@ -47,6 +47,7 @@ The following data related to terms in the Blackboard application are not includ
 
 | Blackboard Field | Notes |
 |---|---|
+| External Term Key | `LEARN.TERM.batch_uid`: `EXTERNAL_TERM_KEY` in SIS feeds, `externalId` in the REST API. Not included in Illuminate: unlike `COURSE` and `PERSON`, `TERM.STAGE` carries only `data_src_pk1` (checked on a demo tenant, 2026-10-28), and `SOURCE_ID` is the term's `pk1`. To select terms, match on `NAME`, or find the `TERM_ID`s of courses whose `COURSE.STAGE:batch_uid` follows the institution's term-code pattern. |
 | Term Data Source Key | The human-readable data source key label is not included in Illuminate for Term. `STAGE:data_src_pk1` provides the numeric identifier for the same data source record. |
 | Duration Type | Controls how course access within the term is calculated (e.g., fixed dates, days from enrollment). |
 | Course Late Access / Reinstatement settings | Term-level late access configuration. |

@@ -17,6 +17,7 @@ See [Data_Monitoring/](Data_Monitoring/README.md) for CDM insert-freshness monit
 | 🆕 `unique_instructors_by_term.sql` | One row per unique active instructor for a given term (deduped across their courses), with external IDs and email. |
 | `instructor_course_activity_summary.sql` | Per instructor/course/term access count, minutes, interactions, and first/last access dates. |
 | `course_org_activity_check.sql` | Flags Classic/Original courses and organizations still seeing activity, to help prioritize Ultra migration outreach. Lookback window and activity-tier thresholds are tunable via a `Params` CTE. |
+| 🆕 `student_engagement_by_term.sql` | Per student enrollment in the selected terms: active days, last course access, total minutes, and discussion post count (Original and Ultra). Terms are selected by `TERM.NAME`, since Illuminate's TERM has no external term key. Counts days in a set time zone (default Eastern), not the session's. |
 | `student_course_summary.sql` | Per-student, per-course summary combining access activity, submission counts, and grade summary. Adapted from the community `BBDN-BlackboardData-Queries/student-course-summary` script. |
 | `MultiCourseUserParticipation_20260424.sql` | Extended version of Blackboard's "User Participation Report" — per enrollment, combines test/discussion submission counts, system-wide last login, and course access/duration/interaction stats. Filters live in a `params` CTE at the top. |
 
