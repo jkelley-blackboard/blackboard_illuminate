@@ -9,7 +9,7 @@
 ## Identifiers & Keys
 
 - **[ID](https://illuminate.blackboard.com/dictionary/entries/entry/CDM_LMS-PERSON_COURSE-ID)** — Snowflake surrogate key for the enrollment record.
-- **[SOURCE_ID](https://illuminate.blackboard.com/dictionary/entries/entry/CDM_LMS-PERSON_COURSE-SOURCE_ID)** — Blackboard Learn internal primary key (`pk1`) from `LEARN.COURSE_USERS`. This value is stable and never reused.
+- **[SOURCE_ID](https://illuminate.blackboard.com/dictionary/entries/entry/CDM_LMS-PERSON_COURSE-SOURCE_ID)** — Composite natural key for the enrollment, in the form `<person SOURCE_ID>;<course SOURCE_ID>` (i.e. the user's and course's Blackboard `pk1` values, e.g. `31632;12884`). It is not the enrollment's own `pk1`; for that, use `STAGE:pk1`.
 - **[PERSON_ID](https://illuminate.blackboard.com/dictionary/entries/entry/CDM_LMS-PERSON_COURSE-PERSON_ID)** — References `CDM_LMS.PERSON.ID`.
 - **[COURSE_ID](https://illuminate.blackboard.com/dictionary/entries/entry/CDM_LMS-PERSON_COURSE-COURSE_ID)** — References `CDM_LMS.COURSE.ID`.
 - **[INSTANCE_ID](https://illuminate.blackboard.com/dictionary/entries/entry/CDM_LMS-PERSON_COURSE-INSTANCE_ID)** — Identifies the Blackboard Learn deployment. All records from a single deployment share this value.
@@ -32,8 +32,8 @@
 
 ## Accommodations
 
-- **[DUE_DATE_EXCEPTION](https://illuminate.blackboard.com/dictionary/entries/entry/CDM_LMS-PERSON_COURSE-DUE_DATE_EXCEPTION)** — Due date accommodation for this user in Ultra courses. `NULL` = no accommodation; `≤ 0` = unlimited extension; `> 0` = additional time in seconds. Applies to Ultra course sections only.
-- **[TIME_LIMIT_EXCEPTION](https://illuminate.blackboard.com/dictionary/entries/entry/CDM_LMS-PERSON_COURSE-TIME_LIMIT_EXCEPTION)** — Time limit accommodation for this user in Ultra courses. `NULL` = no accommodation; `0` = unlimited time; `150` = 1.5× the standard limit; `200` = 2× the standard limit. Applies to Ultra course sections only.
+- **[DUE_DATE_EXCEPTION](https://illuminate.blackboard.com/dictionary/entries/entry/CDM_LMS-PERSON_COURSE-DUE_DATE_EXCEPTION)** — Due date accommodation for this user in Ultra courses. `NULL` = no accommodation; `0` = accommodation on (the student can submit after the due date without being marked late). The Blackboard setting is a single on/off checkbox, so no other value occurs in practice, even though the data dictionary describes `> 0` as additional time in seconds. Applies to Ultra course sections only.
+- **[TIME_LIMIT_EXCEPTION](https://illuminate.blackboard.com/dictionary/entries/entry/CDM_LMS-PERSON_COURSE-TIME_LIMIT_EXCEPTION)** — Time limit accommodation for this user in Ultra courses. `NULL` = no accommodation; `0` = unlimited time; otherwise a percentage of the standard limit (`150` = 1.5×, `200` = 2×). Any percentage can occur, not just preset multiples: values from `101` to `200` (for example `125`, `133`) appear in practice. Applies to Ultra course sections only.
 
 ## Lifecycle & Audit
 
@@ -45,7 +45,7 @@
 
 ## Data Source & Governance (STAGE)
 
-- **[STAGE:pk1](https://illuminate.blackboard.com/dictionary/entries/entry/CDM_LMS-PERSON_COURSE-STAGE)** — Blackboard `pk1` of the enrollment record; mirrors `SOURCE_ID`.
+- **[STAGE:pk1](https://illuminate.blackboard.com/dictionary/entries/entry/CDM_LMS-PERSON_COURSE-STAGE)** — Blackboard `pk1` of the enrollment record (`LEARN.COURSE_USERS.pk1`). Unlike `SOURCE_ID`, which is built from the person and course keys, this is the enrollment's own primary key.
 
 > The enrollment data source key — visible to administrators in the Blackboard enrollment management interface — is an attribute of the Blackboard enrollment record that is outside Illuminate's current scope. The data source key for the associated user and course records is available via `CDM_LMS.PERSON.STAGE:data_src_batchuid` and `CDM_LMS.COURSE.STAGE:data_src_batchuid` respectively.
 
